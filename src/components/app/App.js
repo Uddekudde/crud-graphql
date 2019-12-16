@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -20,6 +21,26 @@ function App() {
 
   return (
     <div className="flex-container">
+      <form className="form" noValidate autoComplete="off">
+        <TextField 
+          name="username" 
+          fullWidth 
+          label="Name" 
+        />
+        <TextField 
+          name="email" 
+          fullWidth 
+          label="Email" 
+        />
+        <div class="form-buttons">
+          <Button className="button-submit" type="submit">
+            Submit
+          </Button>
+          <Button className="button-clear" type="button">
+            Clear
+          </Button>
+        </div>
+      </form>
       { posts ?
         posts.map(post => (
           <Card key = {post.id}>
