@@ -8,37 +8,58 @@ import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import './App.css';
 
+const BASE_URL = "http://localhost:3000/posts";
+
 function App() {
 
   const [posts, setPost] = useState(false);
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
 
   useEffect(() =>{
-    axios.get('http://localhost:3000/posts')
+    axios.get(BASE_URL)
     .then(response => {
       setPost(response.data);
     })
   }, []);
 
+  function handleSubmit() {
+    console.log("subitted");
+    axios.post(BASE_URL, {
+      id: Date.now(),
+      title: username,
+      author: email
+    })
+    .then(response => {
+    })
+  }
+
   return (
     <div className="flex-container">
-      <form className="form" noValidate autoComplete="off">
+      <form className="form" onSubmit={handleSubmit} noValidate autoComplete="off">
         <TextField 
           name="username" 
           fullWidth 
           label="Name" 
+          onChange={(event) => setUsername(event.target.value)}
         />
         <TextField 
           name="email" 
           fullWidth 
           label="Email" 
+          onChange={(event) => setEmail(event.target.value)}
         />
-        <div class="form-buttons">
-          <Button className="button-submit" type="submit">
-            Submit
-          </Button>
-          <Button className="button-clear" type="button">
-            Clear
-          </Button>
+        <div className="form-buttons">
+          <div className="button-margin">
+            <Button className="button-submit" variant="contained" type="submit">
+              Submit
+            </Button>
+          </div>
+          <div className="button-margin">
+            <Button className="button-clear" variant="contained">
+              Clear
+            </Button>
+          </div>
         </div>
       </form>
       { posts ?

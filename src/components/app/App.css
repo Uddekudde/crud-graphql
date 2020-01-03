@@ -21,4 +21,9 @@
 .form-buttons {
   display: flex;
   justify-content: center;
+  margin: 0.5em;
+}
+
+.button-margin {
+  margin: 0.5em;
 }
