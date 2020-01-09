@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import "./App.css";
 
-const BASE_URL = "http://localhost:3000/posts";
+const API_BASE_URL = "http://localhost:3000/posts";
 
 function App() {
   const [posts, setPost] = useState(false);
@@ -16,7 +16,7 @@ function App() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    axios.get(BASE_URL).then(response => {
+    axios.get(API_BASE_URL).then(response => {
       setPost(response.data);
     });
   }, []);
@@ -27,17 +27,22 @@ function App() {
 
     if (!userEmpty && !emailEmpty) {
       console.log("subitted");
-      axios
-        .post(BASE_URL, {
-          id: Date.now(),
-          title: username,
-          author: email
-        })
-        .then(response => {});
+      const post = {
+        id: Date.now(),
+        username: username,
+        email: email
+      };
+      axios.post(API_BASE_URL, post).then(response => {});
     }
   }
 
-  function handleDelete() {}
+  function handleDelete(post) {
+    console.log(post.id);
+    axios.delete(API_BASE_URL + "/" + post.id.toString()).then(res => {
+      console.log("USER DELETED", res);
+      setPost(posts.filter(u => u.id !== post.id));
+    });
+  }
 
   function handleChange(event) {
     event.target.name === "username"
@@ -78,8 +83,12 @@ function App() {
               Submit
             </Button>
           </div>
-          <div onClick={handleClear} className="button-margin">
-            <Button className="button-clear" variant="contained">
+          <div className="button-margin">
+            <Button
+              onClick={handleClear}
+              className="button-clear"
+              variant="contained"
+            >
               Clear
             </Button>
           </div>
@@ -89,12 +98,22 @@ function App() {
         posts.map(post => (
           <Card key={post.id}>
             <CardContent>
-              <Typography variant="h5">{post.title}</Typography>
-              <Typography variant="subtitle1">{post.author}</Typography>
+              <Typography variant="h5">{post.username}</Typography>
+              <Typography variant="subtitle1">{post.email}</Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">EDIT</Button>
-              <Button size="small">DELETE</Button>
+              <Button
+                onClick={() => {
+                  setUsername(post.username);
+                  setEmail(post.email);
+                }}
+                size="small"
+              >
+                EDIT
+              </Button>
+              <Button onClick={() => handleDelete(post)} size="small">
+                DELETE
+              </Button>
             </CardActions>
           </Card>
         ))
