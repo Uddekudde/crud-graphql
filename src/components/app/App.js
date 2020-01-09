@@ -8,39 +8,54 @@ import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import "./App.css";
 
-const API_BASE_URL = "http://localhost:3000/posts";
+const API_BASE_URL = "http://localhost:3000/contacts";
 
 function App() {
-  const [posts, setPost] = useState(false);
+  const [contacts, setContact] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [contactId, setId] = useState("");
 
   useEffect(() => {
     axios.get(API_BASE_URL).then(response => {
-      setPost(response.data);
+      setContact(response.data);
     });
   }, []);
 
   function handleSubmit() {
-    const userEmpty = username === "";
-    const emailEmpty = email === "";
+    const contactExists = contacts.some(u => u.id === contactId);
 
-    if (!userEmpty && !emailEmpty) {
-      console.log("subitted");
-      const post = {
-        id: Date.now(),
+    if (contactExists) {
+      console.log("update" + contactId);
+      const contact = {
+        id: contactId,
         username: username,
         email: email
       };
-      axios.post(API_BASE_URL, post).then(response => {});
+      axios
+        .put(API_BASE_URL + "/" + contactId.toString(), contact)
+        .then(response => {});
+      handleClear();
+    } else {
+      const userEmpty = username === "";
+      const emailEmpty = email === "";
+      if (!userEmpty && !emailEmpty) {
+        console.log("subitted");
+        const contact = {
+          id: Date.now(),
+          username: username,
+          email: email
+        };
+        axios.post(API_BASE_URL, contact).then(response => {});
+      }
     }
   }
 
-  function handleDelete(post) {
-    console.log(post.id);
-    axios.delete(API_BASE_URL + "/" + post.id.toString()).then(res => {
+  function handleDelete(contact) {
+    console.log(contact.id);
+    axios.delete(API_BASE_URL + "/" + contact.id.toString()).then(res => {
       console.log("USER DELETED", res);
-      setPost(posts.filter(u => u.id !== post.id));
+      setContact(contacts.filter(u => u.id !== contact.id));
     });
   }
 
@@ -53,6 +68,7 @@ function App() {
   function handleClear() {
     setUsername("");
     setEmail("");
+    setId("");
   }
 
   return (
@@ -94,24 +110,25 @@ function App() {
           </div>
         </div>
       </form>
-      {posts ? (
-        posts.map(post => (
-          <Card key={post.id}>
+      {contacts ? (
+        contacts.map(contact => (
+          <Card key={contact.id}>
             <CardContent>
-              <Typography variant="h5">{post.username}</Typography>
-              <Typography variant="subtitle1">{post.email}</Typography>
+              <Typography variant="h5">{contact.username}</Typography>
+              <Typography variant="subtitle1">{contact.email}</Typography>
             </CardContent>
             <CardActions>
               <Button
                 onClick={() => {
-                  setUsername(post.username);
-                  setEmail(post.email);
+                  setUsername(contact.username);
+                  setEmail(contact.email);
+                  setId(contact.id);
                 }}
                 size="small"
               >
                 EDIT
               </Button>
-              <Button onClick={() => handleDelete(post)} size="small">
+              <Button onClick={() => handleDelete(contact)} size="small">
                 DELETE
               </Button>
             </CardActions>

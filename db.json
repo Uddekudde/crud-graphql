@@ -1,5 +1,5 @@
 {
-  "posts": [
+  "contacts": [
     {
       "id": 2,
       "username": "dat-boi",
@@ -9,11 +9,6 @@
       "id": 1578493088054,
       "username": "awd",
       "email": "awd"
-    },
-    {
-      "id": 1578493096333,
-      "username": "awdawdawdaw",
-      "email": "awdawdawd"
     },
     {
       "id": 1578494067262,
