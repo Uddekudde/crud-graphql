@@ -5,26 +5,34 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import axios from "axios";
-import ApolloClient from "apollo-boost";
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
 import "./App.css";
 
-const GRAPHQL_URL = "http://localhost:4000";
-
-const client = new ApolloClient({
-  uri: GRAPHQL_URL,
-});
+const GET_POSTS = gql`
+  {
+    allPosts {
+      id
+      username
+      email
+    }
+  }
+`;
 
 function GraphQLApp() {
-  const [contacts, setContact] = useState(false);
+  const { loading, data } = useQuery(GET_POSTS);
+  const [contacts, setContact] = useState(data);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [contactId, setId] = useState("");
+  if (data) {
+    console.log(data);
+  }
 
   useEffect(() => {
-    axios.get(API_BASE_URL).then(response => {
+    /**axios.get(API_BASE_URL).then(response => {
       setContact(response.data);
-    });
+    });**/
   }, []);
 
   function handleSubmit() {
@@ -37,9 +45,9 @@ function GraphQLApp() {
         username: username,
         email: email
       };
-      axios
+      /*axios
         .put(API_BASE_URL + "/" + contactId.toString(), contact)
-        .then(response => {});
+        .then(response => {});*/
       handleClear();
     } else {
       const userEmpty = username === "";
@@ -51,17 +59,17 @@ function GraphQLApp() {
           username: username,
           email: email
         };
-        axios.post(API_BASE_URL, contact).then(response => {});
+        /*axios.post(API_BASE_URL, contact).then(response => {});*/
       }
     }
   }
 
   function handleDelete(contact) {
-    console.log(contact.id);
+    /*console.log(contact.id);
     axios.delete(API_BASE_URL + "/" + contact.id.toString()).then(res => {
       console.log("USER DELETED", res);
       setContact(contacts.filter(u => u.id !== contact.id));
-    });
+    });*/
   }
 
   function handleChange(event) {
@@ -115,8 +123,8 @@ function GraphQLApp() {
           </div>
         </div>
       </form>
-      {contacts ? (
-        contacts.map(contact => (
+      {data ? (
+        data.allPosts.map(contact => (
           <Card key={contact.id}>
             <CardContent>
               <Typography variant="h5">{contact.username}</Typography>
@@ -146,4 +154,4 @@ function GraphQLApp() {
   );
 }
 
-export default App;
+export default GraphQLApp;

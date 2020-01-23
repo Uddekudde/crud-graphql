@@ -20,7 +20,7 @@
   "scripts": {
     "start": "set PORT=4000 && react-scripts start",
     "json-server": "json-server db.json",
-    "grapql-server": "json-graphql-server db.js --p 4000",
+    "graphql-server": "json-graphql-server db.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
