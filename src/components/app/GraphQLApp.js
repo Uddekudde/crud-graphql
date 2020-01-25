@@ -6,11 +6,11 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import "./App.css";
 
 const GET_POSTS = gql`
-  {
+  query getPosts {
     allPosts {
       id
       username
@@ -19,24 +19,43 @@ const GET_POSTS = gql`
   }
 `;
 
+const CREATE_CONTACT_MUTATION = gql`
+  mutation createPost($id: ID!, $email: String!, $username: String!) {
+    createPost(id: $id, email: $email, username: $username) {
+      id
+      email
+      username
+    }
+  }
+`;
+
 function GraphQLApp() {
   const { loading, data } = useQuery(GET_POSTS);
-  const [contacts, setContact] = useState(data);
+  const [contacts, setContact] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [contactId, setId] = useState("");
+
+  const [createContact, { error }] = useMutation(CREATE_CONTACT_MUTATION, {
+    variables: { username, email },
+    refetchQueries: ["getPosts"]
+  });
+
+  if (error) {
+    console.log(error);
+  }
+
   if (data) {
-    console.log(data);
+    console.log(contacts);
   }
 
   useEffect(() => {
-    /**axios.get(API_BASE_URL).then(response => {
-      setContact(response.data);
-    });**/
-  }, []);
+    setContact(data);
+  }, [data]);
 
-  function handleSubmit() {
-    const contactExists = contacts.some(u => u.id === contactId);
+  function handleSubmit(event) {
+    event.preventDefault();
+    const contactExists = contacts.allPosts.some(u => u.id === contactId);
 
     if (contactExists) {
       console.log("update" + contactId);
@@ -54,12 +73,9 @@ function GraphQLApp() {
       const emailEmpty = email === "";
       if (!userEmpty && !emailEmpty) {
         console.log("subitted");
-        const contact = {
-          id: Date.now(),
-          username: username,
-          email: email
-        };
-        /*axios.post(API_BASE_URL, contact).then(response => {});*/
+        createContact({
+          variables: { id: Date.now(), username: username, email: email }
+        });
       }
     }
   }

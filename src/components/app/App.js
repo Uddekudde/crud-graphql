@@ -22,7 +22,8 @@ function App() {
     });
   }, []);
 
-  function handleSubmit() {
+  function handleSubmit(event) {
+    event.preventDefault();
     const contactExists = contacts.some(u => u.id === contactId);
 
     if (contactExists) {
