@@ -9,7 +9,7 @@ import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import "./App.css";
 
-const GET_POSTS = gql`
+const GET_CONTACTS = gql`
   query getPosts {
     allPosts {
       id
@@ -29,20 +29,49 @@ const CREATE_CONTACT_MUTATION = gql`
   }
 `;
 
+const UPDATE_CONTACT_MUTATION = gql`
+  mutation updatePost($id: ID!, $email: String!, $username: String!) {
+    updatePost(id: $id, email: $email, username: $username) {
+      id
+      email
+      username
+    }
+  }
+`;
+
+const REMOVE_CONTACT_MUTATION = gql`
+  mutation removePost($id: ID!) {
+    removePost(id: $id)
+  }
+`;
+
 function GraphQLApp() {
-  const { loading, data } = useQuery(GET_POSTS);
+  const { loading, data } = useQuery(GET_CONTACTS);
   const [contacts, setContact] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [contactId, setId] = useState("");
+  const [createContact, { createError }] = useMutation(
+    CREATE_CONTACT_MUTATION,
+    {
+      refetchQueries: ["getPosts"]
+    }
+  );
+  const [updateContact, { updateError }] = useMutation(
+    UPDATE_CONTACT_MUTATION,
+    {
+      refetchQueries: ["getPosts"]
+    }
+  );
+  const [removeContact, { removeError }] = useMutation(
+    REMOVE_CONTACT_MUTATION,
+    {
+      refetchQueries: ["getPosts"]
+    }
+  );
 
-  const [createContact, { error }] = useMutation(CREATE_CONTACT_MUTATION, {
-    variables: { username, email },
-    refetchQueries: ["getPosts"]
-  });
-
-  if (error) {
-    console.log(error);
+  if (updateError) {
+    console.log(updateError);
   }
 
   if (data) {
@@ -55,18 +84,13 @@ function GraphQLApp() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const contactExists = contacts.allPosts.some(u => u.id === contactId);
+    const contactExists = data.allPosts.some(u => u.id === contactId);
 
     if (contactExists) {
       console.log("update" + contactId);
-      const contact = {
-        id: contactId,
-        username: username,
-        email: email
-      };
-      /*axios
-        .put(API_BASE_URL + "/" + contactId.toString(), contact)
-        .then(response => {});*/
+      updateContact({
+        variables: { id: contactId, username: username, email: email }
+      });
       handleClear();
     } else {
       const userEmpty = username === "";
@@ -81,11 +105,9 @@ function GraphQLApp() {
   }
 
   function handleDelete(contact) {
-    /*console.log(contact.id);
-    axios.delete(API_BASE_URL + "/" + contact.id.toString()).then(res => {
-      console.log("USER DELETED", res);
-      setContact(contacts.filter(u => u.id !== contact.id));
-    });*/
+    removeContact({
+      variables: { id: contactId }
+    });
   }
 
   function handleChange(event) {

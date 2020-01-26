@@ -1,7 +1,7 @@
 module.exports = {
     posts: [
-        { id: 1, username: "dat-boi", email: "boi-author" },
-        { id: 1578494067262, username: "LMFAO wHO cAREAS HAHA Xd", email: "artour.babaevsky@elo.hell" },
+        { id: 1, username: "Bob", email: "bob@bob.com" },
+        { id: 2, username: "Alice", email: "alice@alice.com" },
     ],
     users: [
         { id: 123, name: "John Doe" },

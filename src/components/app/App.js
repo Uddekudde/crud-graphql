@@ -27,7 +27,6 @@ function App() {
     const contactExists = contacts.some(u => u.id === contactId);
 
     if (contactExists) {
-      console.log("update" + contactId);
       const contact = {
         id: contactId,
         username: username,
@@ -41,7 +40,6 @@ function App() {
       const userEmpty = username === "";
       const emailEmpty = email === "";
       if (!userEmpty && !emailEmpty) {
-        console.log("subitted");
         const contact = {
           id: Date.now(),
           username: username,
@@ -53,9 +51,7 @@ function App() {
   }
 
   function handleDelete(contact) {
-    console.log(contact.id);
     axios.delete(API_BASE_URL + "/" + contact.id.toString()).then(res => {
-      console.log("USER DELETED", res);
       setContact(contacts.filter(u => u.id !== contact.id));
     });
   }
