@@ -1,3 +1,6 @@
+This is a simple React CRUD client to compare working against a REST api with axios and GraphQL api with Apollo Client.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
