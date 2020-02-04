@@ -45,7 +45,7 @@ const REMOVE_CONTACT_MUTATION = gql`
   }
 `;
 
-function GraphQLApp() {
+const GraphQLApp = (props) => {
   const { loading, data } = useQuery(GET_CONTACTS);
   const [contacts, setContact] = useState(false);
   const [username, setUsername] = useState("");
@@ -84,7 +84,7 @@ function GraphQLApp() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const contactExists = data.allPosts.some(u => u.id === contactId);
+    let contactExists = data.allPosts.some(u => u.id === contactId);
 
     if (contactExists) {
       console.log("update" + contactId);
@@ -93,8 +93,8 @@ function GraphQLApp() {
       });
       handleClear();
     } else {
-      const userEmpty = username === "";
-      const emailEmpty = email === "";
+      let userEmpty = username === "";
+      let emailEmpty = email === "";
       if (!userEmpty && !emailEmpty) {
         console.log("subitted");
         createContact({
@@ -124,7 +124,7 @@ function GraphQLApp() {
 
   return (
     <div className="flex-container">
-      <form
+      {data ? (<form
         className="form"
         onSubmit={handleSubmit}
         noValidate
@@ -160,7 +160,7 @@ function GraphQLApp() {
             </Button>
           </div>
         </div>
-      </form>
+      </form>) : ("")}
       {data ? (
         data.allPosts.map(contact => (
           <Card key={contact.id}>
@@ -186,7 +186,7 @@ function GraphQLApp() {
           </Card>
         ))
       ) : (
-        <div>yeet</div>
+        <div>Loading...</div>
       )}
     </div>
   );
