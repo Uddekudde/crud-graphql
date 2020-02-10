@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-
+import "./ContactList.css";
 
 const REMOVE_CONTACT_MUTATION = gql`
   mutation removePost($id: ID!) {

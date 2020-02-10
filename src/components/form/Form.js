@@ -4,7 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
-
+import "./Form.css";
 
 const CREATE_CONTACT_MUTATION = gql`
   mutation createPost($id: ID!, $email: String!, $username: String!) {
@@ -79,7 +79,7 @@ const Form = props => {
   }
 
   return (
-    <div>
+    <div className="flex-container">
       <form
         className="form"
         onSubmit={handleSubmit}

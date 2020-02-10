@@ -1,0 +1,6 @@
+.MuiCard-root {
+  flex: 0 1 800px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}

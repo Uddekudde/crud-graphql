@@ -6,13 +6,6 @@
   justify-content: center;
 }
 
-.MuiCard-root {
-  flex: 0 1 800px;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5em;
-}
-
 .form {
   flex: 0 1 800px;
   margin: 0.5em;
